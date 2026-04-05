@@ -129,6 +129,82 @@ module filter_cassette_merv13() {
         }
 }
 
+module acoustic_baffles() {
+    /* 
+       Phase 4: Internal spiral baffles for noise reduction.
+       Slides into the main pipe or noise_splitter housing.
+    */
+    h = 100;
+    thickness = 2;
+    difference() {
+        cylinder(h=h, d=pipe_diameter - 4, center=true, $fn=100);
+        cylinder(h=h+2, d=pipe_diameter - 8, center=true, $fn=100);
+        
+        // Spiral cutouts for airflow
+        for(a=[0:60:359]) {
+            rotate([0, 0, a])
+            for(z=[-h/2:10:h/2]) {
+                translate([pipe_diameter/4, 0, z])
+                rotate([45, 0, 0])
+                cube([pipe_diameter/2, thickness, 20], center=true);
+            }
+        }
+    }
+}
+
+module tpu_vibration_motor_mount() {
+    /*
+       Phase 4: TPU motor isolation mount.
+       Damps high-frequency harmonics from the fan motors.
+    */
+    inner_d = 40; // Standard 40mm fan hub or motor dia
+    outer_d = inner_d + 12;
+    h = 15;
+    
+    difference() {
+        union() {
+            cylinder(h=h, d=outer_d, center=true, $fn=100);
+            // Mounting tabs
+            for(a=[0, 120, 240]) rotate([0,0,a])
+                translate([outer_d/2 + 5, 0, 0]) cylinder(h=h, d=10, center=true, $fn=30);
+        }
+        cylinder(h=h+2, d=inner_d, center=true, $fn=100);
+        
+        // Vibration isolation slots
+        for(a=[0:15:359]) rotate([0,0,a])
+            translate([inner_d/2 + 3, 0, 0]) cube([2, 4, h+2], center=true);
+            
+        // Bolt holes
+        for(a=[0, 120, 240]) rotate([0,0,a])
+            translate([outer_d/2 + 5, 0, 0]) cylinder(h=h+2, d=4.5, center=true, $fn=20);
+    }
+}
+
+module flow_straightener_v2() {
+    /*
+       Phase 4: Optimized 22-degree straightener for lower pressure drop.
+       Uses airfoil-shaped vanes instead of flat plates.
+    */
+    h = 40;
+    difference() {
+        cylinder(h=h, d=pipe_diameter - 2, center=true, $fn=100);
+        cylinder(h=h+2, d=pipe_diameter - 6, center=true, $fn=100);
+    }
+    
+    // Airfoil vanes
+    intersection() {
+        cylinder(h=h, d=pipe_diameter - 4, center=true, $fn=100);
+        union() {
+            for(a=[0:22.5:359]) rotate([0, 0, a]) {
+                hull() {
+                    translate([0, 0, 0]) cube([pipe_diameter, 1, h], center=true);
+                    translate([2, 0, 0]) cube([pipe_diameter, 3, h], center=true);
+                }
+            }
+        }
+    }
+}
+
 // --- GENERATION ---
 // Uncomment the part you wish to render
 core_plate();
@@ -136,3 +212,6 @@ core_plate();
 // extension_slider();
 // sill_support_pioneer();
 // filter_cassette_merv13();
+// acoustic_baffles();
+// tpu_vibration_motor_mount();
+// flow_straightener_v2();
