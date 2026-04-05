@@ -1,0 +1,32 @@
+{
+  "project": "Universal Window Mount",
+  "recommended_material": "ASA (Acrylonitrile Styrene Acrylate)",
+  "alternative_material": "PETG (UV-Stabilized)",
+  "notes": "Do NOT use standard PLA. Sunlight and mechanical stress will cause PLA to fail within one season.",
+  "global_settings": {
+    "wall_count": 4,
+    "top_layers": 5,
+    "bottom_layers": 5,
+    "infill_percentage": 30,
+    "infill_type": "Gyroid"
+  },
+  "parts": {
+    "core_plate": {
+      "infill_percentage": 50,
+      "notes": "Structural heart of the system. High infill required for the pipe collar interface."
+    },
+    "extension_slider": {
+      "orientation": "Vertical",
+      "notes": "Print vertically to ensure the 'Tongue and Groove' tracks are precise."
+    },
+    "pipe_collar": {
+      "infill_percentage": 100,
+      "notes": "Solid plastic required to handle the compression force of the M5 bolts."
+    },
+    "sill_support": {
+      "infill_percentage": 60,
+      "wall_count": 6,
+      "notes": "Highest stress part. Must be extremely rigid."
+    }
+  }
+}
